@@ -1,0 +1,51 @@
+def registration(request):
+    if request.method == 'POST':
+        form=NewUserForm()
+        if form.is_valid():
+            userName = form.cleaned_data.get('username')
+            userPass1 = form.cleaned_data.get('password1')
+            userPass2 = form.cleaned_data.get('password2')
+            userMail = form.cleaned_data.get('email')
+            if userPass1 == userPass2:
+                user1 = MUser.objects.create_user(username=userName,email=userMail,password=userPass1)
+                User.objects.create(username=userName,email=userMail,password=userPass1)
+                return HttpResponseRedirect(reverse("login"))
+            else:
+                return HttpResponseRedirect(reverse("register"))
+    else:
+        form=NewUserForm()
+        return render(request = request,
+                          template_name = "blogsys/register.html",
+                          context={"form":form})
+
+
+                          <form action="{% url 'create_blog' %}" method="post">
+                            {% csrf_token %}
+                          <div class="form-group">
+                          <label for="blogname">Blog Title</label>
+                          <input type="text" class="form-control" id="blogname" name="blogname"  placeholder="Blog name">
+                          </div>
+                          <div class="form-group">
+                          <label for="blogtext">Blog Content</label>
+                          <textarea type="text" class="form-control" id="blogtext" name="blogtext"  placeholder="Enter blog contents" maxlength="400"></textarea>
+
+                          <!--label class="custom-file-label" for="blogimg" aria-describedby="blogimg">Choose file</label-->
+
+                          </div>
+                          <div class="form-group">
+                          <label for="blogimg">Upload image</label>
+                          <input type="file" class="form-control-file" id="blogimg"  name="img" accept="image/*">
+                          </div>
+                          <button type="submit" class="btn btn-primary">Submit</button>
+                          </form>
+
+
+
+                          blogname = request.POST.get('blogname')
+                              blogtext = request.POST.get('blogtext')
+                              id=User.objects.get(email=request.user.email)
+                              image = request.POST.get('img')
+                              print(request.POST," ",request.FILES)
+                              image.save('/root/Desktop/bloggingapp/media/images', 'JPEG')
+                              if blogname is not None and blogtext is not None:
+                                  Blogs.objects.create(blogname=blogname,blogtext=blogtext,creatorid=id,blogimage=image,postdate=date.today())

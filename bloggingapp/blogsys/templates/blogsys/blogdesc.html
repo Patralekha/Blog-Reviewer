@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="">
+  <meta name="author" content="">
+
+  <title>Blog Home</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/4.4.1/jquery.min.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  <!-- Custom styles for this template -->
+
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <!--div class="container-fluid"-->
+      <a class="navbar-brand" href="#">Blog Description</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item active">
+            <a class="nav-link" href="{% url 'index' %}">Home
+              <span class="sr-only">(current)</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Logged in as:{{user.username}}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Services</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Contact</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+          </li>
+        </ul>
+      </div>
+    <!--/div-->
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+
+      <!-- Blog Entries Column -->
+      <div class="col-md-8">
+
+        <h1 class="my-4">{{blog.blogname}}
+      </h1>
+
+        <!-- Blog Post -->
+        <div class="card mb-4 my-4 mx-4">
+
+          <img class="card-img-top" src="{{blog.blogimage.url}}" alt="Card image cap">
+          <div class="card-body">
+            <h4 class="card-title">{{blog.blogtext}}</h4>
+            <div class="card-footer">
+              Posted on {{blog.postdate}} by {{blog.creatorid.username}}
+
+
+        <div class="input-group mb-3">
+          <script type="text/javascript">
+              var clicks = 0;
+             function like() {
+             clicks=parseInt(document.getElementById("clicks").innerHTML,10);
+             clicks +=1;
+             document.getElementById("clicks").innerHTML =clicks;
+             if( {{blog.likeno}} !== clicks)
+            {  //document.getElementById("mgh").innerHTML="different";
+            }
+           };
+
+          function dislike(){
+          clicks=parseInt(document.getElementById("clicks1").innerHTML,10);
+          clicks +=1;
+          document.getElementById("clicks1").innerHTML =clicks;
+
+          }
+
+            </script>
+          <button  class="social-like  btn-outline-primary float-left" type="button" onClick="document.getElementById('likebutton').submit();like();"  style="margin-top:8px;margin-left:10px;border-radius:4px;">
+          <span class="like"><i class="glyphicon glyphicon-thumbs-up"></i></span>
+         <span id="clicks" name="likeno">{{blog.likeno}}</span>
+          <form id="likebutton" method="POST" action="{% url 'like' blog.blogid 1 %}">
+              {% csrf_token %}
+               <input type="hidden">
+           </form>
+          </button>
+
+
+            <button class="social-dislike btn-outline-danger  float-none" type="button" onclick="document.getElementById('dislikebutton').submit();dislike();" style="margin-top:8px;margin-left:10px;border-radius:4px;">
+            <span class="like"><i class="glyphicon glyphicon-thumbs-down"></i></span>
+            <span id="clicks1" name="dislikeno">{{blog.dislikeno}}</span>
+            <form id="dislikebutton" method="POST" action="{% url 'like' blog.blogid 2 %}">
+                {% csrf_token %}
+             <input type="hidden">
+           </form>
+            </button>
+
+            &nbsp;&nbsp;&nbsp;&nbsp;
+
+
+      </div>
+      </div>
+      </div>
+      </div>
+
+        <label style="font-weight:bold;">Leave a comment</label>
+        <div class="input-group mb-3">
+          <form action="{% url 'comment' blog.blogid %}" method="post" id="commentform">
+            {% csrf_token %}
+          <textarea type="text"  name="comment" placeholder="Comment" class="form-control" required="required" maxlength="400"></textarea>
+          <br/><br/><br/><br/>
+          <input type="submit" class="btn btn-lg btn-danger" value="Submit">
+        </form>
+        <div>
+        </div>
+      </div>
+
+
+      <p>
+      <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseblog" aria-expanded="false" aria-controls="collapseExample">
+      More Comments &rarr;
+      </button>
+      </p>
+      <div class="collapse" id="collapseblog">
+      {% for c in usercomments %}
+      <div class="card mb-4 " style="width=100%;">
+        <div class="card-body" style="width: 90%;">
+          <h4 class="card-text">{{ c.comments }}</h4>
+        </div>
+        <div class="card-footer text-muted">
+          Posted on {{c.postedon}} by {{c.userid.username}}
+        </div>
+      </div>
+      {% empty %}
+      <p><h2>No comments to display</h2></p>
+      {% endfor %}
+      </div>
+      <br/>
+</div>
+
+
+
+
+
+
+
+</div>
+</div>
+
+  <!-- /.container -->
+
+  <!-- Footer -->
+  <footer class="py-3 fixed-bottom bg">
+    <div class="container">
+      <p class="m-0 text-center text-black">Copyright &copy; Your Website 2020</p>
+    </div>
+    <!-- /.container -->
+  </footer>
+
+
+
+</body>
+
+</html>
