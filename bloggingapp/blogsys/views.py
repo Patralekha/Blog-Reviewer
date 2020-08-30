@@ -140,7 +140,7 @@ def submit_like(request,blogid,userpreference):
                     likeno=Blogs.objects.get(pk=blogid).likeno+1
                     Blogs.objects.filter(pk=blogid).update(likeno=likeno)
                 else:
-                    dislikeno=Blogs.objects.filter(pk=blogid).dislikeno+1
+                    dislikeno=Blogs.objects.get(pk=blogid).dislikeno+1
                     Blogs.objects.filter(pk=blogid).update(dislikeno=dislikeno)
             else:
                 if userpreference != existing_like:
@@ -161,7 +161,7 @@ def submit_like(request,blogid,userpreference):
                 likeno=Blogs.objects.get(pk=blogid).likeno+1
                 Blogs.objects.filter(pk=blogid).update(likeno=likeno)
             else:
-                dislikeno=Blogs.objects.filter(pk=blogid).dislikeno+1
+                dislikeno=Blogs.objects.get(pk=blogid).dislikeno+1
                 Blogs.objects.filter(pk=blogid).update(dislikeno=dislikeno)
     return HttpResponseRedirect(reverse("blogd",args=[blogid]))
 
